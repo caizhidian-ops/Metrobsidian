@@ -28,7 +28,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          for file in .ops/prepare/part-*; do
+            printf '%s ' "$file"
+            wc -c < "$file" | tr -d '\n'
+            printf ' '
+            sha256sum "$file" | cut -d' ' -f1
+          done
           cat .ops/prepare/part-* > /tmp/prepare-public.b64
+          sha256sum /tmp/prepare-public.b64
           echo "3ad386808c60bc4142e5f0b8031ed961957d5072d3292d7ab64d15db4c6c7cc4  /tmp/prepare-public.b64" | sha256sum --check
           base64 --decode /tmp/prepare-public.b64 | gzip --decompress > /tmp/prepare-public.py
           echo "87a7a7e8c94422433a362742debc9ba5594586ec7d77375ebc882a84a76b0159  /tmp/prepare-public.py" | sha256sum --check
