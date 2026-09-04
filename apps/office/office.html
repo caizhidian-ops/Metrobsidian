@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#e8e1d7" />
+    <title>海蓝中庭 · 3D 办公空间</title>
+  </head>
+  <body>
+    <main id="office-app" aria-label="可交互的现代企业办公空间">
+      <div id="scene" aria-hidden="true"></div>
+
+      <header class="scene-header">
+        <a class="scene-brand" href="/" aria-label="返回 Metrobsidian">
+          <span class="scene-brand__mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span><strong>海蓝中庭</strong><small>INTERACTIVE OFFICE STUDY</small></span>
+        </a>
+        <nav class="view-controls" aria-label="空间导航">
+          <button type="button" data-view="hero" aria-label="主视角" title="主视角" aria-pressed="true">◎</button>
+          <button type="button" data-view="plan" aria-label="俯瞰" title="俯瞰" aria-pressed="false">⌗</button>
+          <button type="button" id="light-toggle" aria-label="切换日夜" title="切换日夜" aria-pressed="false">◐</button>
+          <button type="button" id="gallery-toggle" aria-label="打开公司中庭画廊" title="公司中庭画廊" aria-pressed="false">ART</button>
+          <a class="lab-entry" href="/laboratory.html" aria-label="进入计算科学实验室" title="计算科学实验室">LAB</a>
+        </nav>
+      </header>
+
+      <div id="loading" role="status" aria-live="polite">
+        <div class="loading-mark" aria-hidden="true"><i></i><i></i><i></i></div>
+        <p>正在构筑空间</p>
+        <span></span>
+      </div>
+
+      <section id="webgl-fallback" hidden>
+        <h1>无法加载 3D 办公空间</h1>
+        <p>当前浏览器没有可用的 WebGL 图形环境。</p>
+      </section>
+    </main>
+    <div id="office-gallery-root"></div>
+    <script type="module" src="/src/office/main.ts"></script>
+  </body>
+</html>

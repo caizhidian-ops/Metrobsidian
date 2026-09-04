@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Metrobsidian Research Shelf</title>
+    <style>
+      :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #07111d; color: #eef2f5; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; overflow: hidden; background: radial-gradient(circle at 50% 15%, #18324a, #07111d 62%); }
+      main { min-height: 100vh; display: grid; grid-template-rows: auto 1fr auto; padding: clamp(18px, 4vw, 52px); gap: 22px; }
+      header { display: flex; justify-content: space-between; gap: 24px; align-items: end; }
+      h1 { margin: 0; max-width: 760px; font-size: clamp(36px, 8vw, 92px); line-height: .92; letter-spacing: -.055em; }
+      p { margin: 0; color: #9db1c2; max-width: 520px; line-height: 1.55; }
+      .shelf { align-self: center; perspective: 1200px; display: grid; grid-template-columns: repeat(6, minmax(70px, 1fr)); align-items: end; gap: clamp(8px, 1.5vw, 20px); padding: 28px 32px 22px; border-bottom: 18px solid #76543c; border-radius: 18px; background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)); box-shadow: 0 26px 80px rgba(0,0,0,.35); }
+      button { min-height: clamp(180px, 34vh, 390px); border: 0; border-radius: 7px 13px 13px 7px; padding: 18px 10px; cursor: pointer; text-align: left; color: #f7f1e8; background: var(--book); box-shadow: inset -10px 0 rgba(0,0,0,.13), 0 16px 28px rgba(0,0,0,.25); transform: rotateY(-8deg); transform-origin: right; transition: transform .2s ease, filter .2s ease; writing-mode: vertical-rl; font-weight: 700; letter-spacing: .12em; }
+      button:nth-child(even) { min-height: clamp(150px, 29vh, 340px); }
+      button:hover, button:focus-visible, button[aria-pressed="true"] { transform: translateY(-20px) rotateY(0); filter: brightness(1.12); outline: 3px solid #c5a3ff; outline-offset: 4px; }
+      aside { min-height: 92px; display: grid; gap: 6px; align-content: start; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.14); }
+      aside strong { font-size: 18px; }
+      footer { color: #71879a; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
+      @media (max-width: 720px) { header { align-items: start; flex-direction: column; } .shelf { grid-template-columns: repeat(3, 1fr); overflow: auto; } button { min-height: 170px; } }
+      @media (prefers-reduced-motion: reduce) { button { transition: none; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Research<br />Shelf</h1>
+        <p>一组可进入的研究体积。选择书脊，查看这座实验室正在保存的问题，而不是假装它们已有答案。</p>
+      </header>
+      <section class="shelf" aria-label="研究主题书架">
+        <button style="--book:#7858bd" data-title="空间记忆" data-note="空间如何帮助人重新定位记忆、关系与证词。">空间记忆</button>
+        <button style="--book:#1f5474" data-title="知识地图" data-note="文件夹之外，知识还能以哪些空间关系出现。">知识地图</button>
+        <button style="--book:#a45e3f" data-title="本地 Agent" data-note="让 Agent 读取、行动与留下可审计痕迹。">本地 Agent</button>
+        <button style="--book:#47705b" data-title="生成建筑" data-note="把新主题变成可识别、可进入的城市增量。">生成建筑</button>
+        <button style="--book:#5a6878" data-title="交互验证" data-note="用路径、视角和操作成本检验空间隐喻。">交互验证</button>
+        <button style="--book:#866044" data-title="开放问题" data-note="仍未解决：规模、检索、协作和长期演化。">开放问题</button>
+      </section>
+      <aside aria-live="polite"><strong id="title">选择一个研究体积</strong><p id="note">可使用 Tab 与 Enter 浏览。</p></aside>
+      <footer>Metrobsidian · self-contained public demo</footer>
+    </main>
+    <script>
+      const buttons = [...document.querySelectorAll('button')];
+      const title = document.getElementById('title');
+      const note = document.getElementById('note');
+      buttons.forEach((button) => button.addEventListener('click', () => {
+        buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+        title.textContent = button.dataset.title;
+        note.textContent = button.dataset.note;
+      }));
+    </script>
+  </body>
+</html>

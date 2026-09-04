@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ROOM 2708 · Three.js 酒店客房</title>
+  </head>
+  <body>
+    <main id="app" aria-label="Three.js 酒店客房 3D 场景">
+      <div class="room-ui">
+        <header class="room-title">
+          <span class="eyebrow">DEEPSPACE / INTERIOR STUDY 01</span>
+          <h1>Room 2708</h1>
+          <p>夜幕降临，城市还醒着。</p>
+        </header>
+
+        <nav class="view-nav" aria-label="客房镜头">
+          <span>VIEW</span>
+          <button type="button" data-view="overview" class="is-active">全景</button>
+          <button type="button" data-view="bedside">床边</button>
+          <button type="button" data-view="window">窗景</button>
+        </nav>
+
+        <button id="light-toggle" class="light-toggle" type="button" aria-pressed="true">
+          <i aria-hidden="true"></i>
+          <span>夜间氛围</span>
+        </button>
+
+        <p class="room-hint">拖拽旋转 · 滚轮缩放 · 双击复位</p>
+        <div class="room-index" aria-hidden="true"><b>27</b><span>/ 08</span></div>
+      </div>
+      <div id="scene"></div>
+    </main>
+    <script type="module" src="/src/hotel/main.ts"></script>
+  </body>
+</html>

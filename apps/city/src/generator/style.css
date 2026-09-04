@@ -1,0 +1,147 @@
+/* AI 生成建筑 —— 面板与按钮样式 */
+
+.gen-toggle {
+  min-height: 2.75rem;
+  padding: 0 var(--space-sm);
+  border: var(--rule-thin) solid var(--color-rule);
+  border-radius: var(--radius-sm);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: .9rem;
+  cursor: pointer;
+  box-shadow: none;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.gen-toggle:hover { transform: translateY(-1px); border-color: var(--color-accent); }
+.gen-toggle.active { background: var(--color-accent-soft); border-color: var(--color-accent); }
+
+.gen-panel {
+  position: fixed;
+  top: 5.75rem;
+  left: var(--space-md);
+  z-index: 301;
+  width: min(22rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+  padding: 1rem 1.1rem 1.2rem;
+  border: 1px solid rgba(49, 85, 132, .25);
+  border-radius: 1rem;
+  background: rgba(248, 252, 255, .96);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 .8rem 2.4rem rgba(55, 94, 144, .18);
+  color: #17345e;
+  font-family: inherit;
+}
+.gen-panel[hidden] { display: none; }
+
+.gen-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .8rem;
+}
+.gen-head strong { font-family: var(--font-display, sans-serif); font-size: 1.05rem; letter-spacing: -.02em; }
+.gen-close {
+  width: 2rem; height: 2rem;
+  border: 0; border-radius: .5rem;
+  background: transparent; color: inherit; cursor: pointer;
+  font-size: 1.1rem; line-height: 1;
+}
+.gen-close:hover { background: rgba(70, 103, 173, .12); }
+
+.gen-field { display: block; margin-bottom: .7rem; }
+.gen-field > span { display: block; font-size: .78rem; font-weight: 600; color: #446486; margin-bottom: .3rem; }
+.gen-prompt {
+  display: block; width: 100%;
+  padding: .55rem .65rem;
+  border: 1px solid rgba(49, 85, 132, .25);
+  border-radius: .55rem;
+  background: #fff;
+  color: inherit;
+  font-family: var(--font-mono, monospace);
+  font-size: .82rem;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 4rem;
+}
+.gen-prompt:focus { outline: 2px solid #0f6fe8; outline-offset: 1px; }
+.gen-hint { display: block; margin-top: .25rem; color: #7a8aa0; font-size: .68rem; font-family: var(--font-mono, monospace); }
+
+.gen-preset {
+  display: flex; align-items: flex-start; gap: .45rem;
+  margin: .6rem 0 .9rem;
+  font-size: .76rem; line-height: 1.45;
+  color: #446486; cursor: pointer;
+}
+.gen-preset input { margin-top: .15rem; }
+
+.gen-go {
+  display: block; width: 100%;
+  min-height: 2.6rem;
+  margin-bottom: .8rem;
+  border: 0; border-radius: .6rem;
+  background: #0f6fe8;
+  color: #fff;
+  font-family: inherit; font-weight: 600; font-size: .92rem;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+.gen-go:hover:not(:disabled) { background: #0a5fc4; }
+.gen-go:disabled { background: #b0c4d8; cursor: not-allowed; }
+
+.gen-steps {
+  list-style: none;
+  margin: 0 0 .6rem; padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .3rem;
+}
+.gen-steps li {
+  padding: .35rem .4rem;
+  border: 1px solid rgba(49, 85, 132, .15);
+  border-radius: .35rem;
+  font-size: .68rem;
+  color: #7a8aa0;
+  text-align: center;
+  transition: all .2s ease;
+}
+.gen-steps li.active { border-color: #0f6fe8; color: #0f6fe8; background: rgba(15, 111, 232, .08); font-weight: 600; }
+.gen-steps li.done { border-color: #4caf50; color: #4caf50; background: rgba(76, 175, 80, .08); }
+.gen-steps li.done::before { content: '✓ '; }
+
+.gen-status {
+  margin: 0 0 .3rem;
+  font-size: .78rem;
+  font-family: var(--font-mono, monospace);
+  color: #446486;
+}
+
+.gen-error {
+  margin: 0 0 .5rem;
+  padding: .5rem .6rem;
+  border-radius: .45rem;
+  background: rgba(220, 53, 69, .1);
+  border: 1px solid rgba(220, 53, 69, .3);
+  color: #a82838;
+  font-size: .76rem;
+  line-height: 1.45;
+}
+.gen-error[hidden] { display: none; }
+
+.gen-preview {
+  display: block;
+  width: 100%;
+  max-height: 12rem;
+  object-fit: contain;
+  border-radius: .5rem;
+  border: 1px solid rgba(49, 85, 132, .15);
+  background: #fff;
+}
+.gen-preview[hidden] { display: none; }
+
+@media (max-width: 720px) {
+  .gen-panel { bottom: 21rem; width: calc(100vw - 2rem); }
+  .gen-steps { grid-template-columns: repeat(2, 1fr); }
+}

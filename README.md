@@ -1,20 +1,23 @@
 # Metrobsidian
 
-> Turn files, notes, and AI agents into a city you can enter.
+[中文说明](./README.zh-CN.md)
 
-Metrobsidian is a local-first 3D knowledge-space prototype built with Three.js. It turns a folder of Markdown notes into an explorable city: knowledge categories become districts, documents become objects you can open, and local agents can move through the same spatial model to read, summarize, and organize information.
+> Turn files, notes, and local AI agents into a city you can enter.
+
+Metrobsidian is a local-first 3D knowledge-space prototype built with Three.js. It turns Markdown folders into an explorable city: knowledge categories become districts, documents become objects you can open, and local agents can move through the same spatial model to read, summarize, and organize information.
 
 ![Metrobsidian city preview](./apps/city/preview.png)
 
-## What it demonstrates
+## Why it exists
 
-- **Spatial knowledge navigation** — browse documents through buildings, districts, a minimap, and search instead of a conventional folder tree.
-- **Local-first ingestion** — scan authorized local folders or upload files to a local FastAPI service; source files remain unchanged.
-- **Extensible 3D scenes** — the city, home, school, hospital, construction site, canteen, gallery, office, and laboratory are independent scene entry points.
-- **Agent-in-the-world interaction** — local agents can read restricted project context, keep task traces, and visualize progress inside the city.
-- **Generative buildings** — an optional local pipeline can turn a prompt or uploaded knowledge cluster into an image, then a GLB asset.
+Conventional knowledge tools flatten everything into lists, folders, and search results. Metrobsidian tests a different interface: stable places, spatial relationships, visible growth, and agents whose work has a location and trace.
 
-This repository is an experimental reference implementation, not a hosted multi-tenant product. Local services are intentionally bound to loopback addresses by default.
+The repository demonstrates four ideas:
+
+- **Knowledge as place** — buildings, districts, a minimap, and search provide multiple ways to navigate the same material.
+- **Local-first ingestion** — a FastAPI service scans explicitly authorized folders or receives uploads without modifying source files.
+- **Scene-based architecture** — the city and interior spaces are independent Vite entry points instead of one global scene controller.
+- **Agents in the world** — local agents can read restricted project context, keep Markdown task traces, and expose progress through the 3D interface.
 
 ## Architecture
 
@@ -24,40 +27,36 @@ Metrobsidian/
 │   ├── city/                 # Main Three.js knowledge city
 │   └── office/               # Office and laboratory scenes
 ├── services/
-│   └── knowledge/            # FastAPI ingestion and classification service
+│   ├── knowledge/            # FastAPI ingestion and classification
+│   ├── generation/           # Optional image → 3D provider adapter
+│   ├── agent/                # Restricted local agent runtime
+│   └── collaboration/        # Local WebSocket presence prototype
 ├── content/
-│   └── knowledge-base/       # Sanitized demonstration knowledge
-├── docs/                     # Product and interaction documents
-├── package.json              # npm workspaces and root commands
-└── serve-deep-city.mjs       # Integrated production-build preview server
+│   └── demo-knowledge-base/  # Rewritten, sanitized demonstration notes
+├── docs/                     # Architecture and product notes
+└── serve-deep-city.mjs       # Integrated production-build preview
 ```
 
-The browser applications are static Vite builds. Optional Node and Python services run locally and are not required to explore the bundled demonstration content.
+Browser applications are static Vite builds. Every optional service binds to `127.0.0.1` by default and is not required to explore bundled demonstration content.
 
 ## Quick start
 
-Requirements:
-
-- Node.js `20.19+` or `22.12+`
-- npm `10+`
-- A browser with WebGL enabled
+Requirements: Node.js `22.12+`, npm `10+`, and a browser with WebGL enabled.
 
 ```bash
 npm install
 npm run dev:city
 ```
 
-Open `http://localhost:5173`.
+Open `http://127.0.0.1:5173`.
 
-To run the office and laboratory app in parallel:
+The company interior is a separate application. Run it in another terminal:
 
 ```bash
 npm run dev:office
 ```
 
-Open `http://localhost:5174/office.html`.
-
-## Build and integrated preview
+It opens at `http://127.0.0.1:5174/office.html`. In production-preview mode both applications share one origin:
 
 ```bash
 npm run build
@@ -68,42 +67,53 @@ Open `http://127.0.0.1:5190`.
 
 ## Optional local services
 
-### Knowledge ingestion
-
-```bash
-cd services/knowledge
-python -m venv .venv
-source .venv/bin/activate       # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
-```
-
-The city falls back to bundled Markdown when this service is unavailable. See [`services/knowledge/README.md`](./services/knowledge/README.md) for its API and data model.
-
-### Building generation and local agents
-
-Copy the environment template before enabling provider-backed features:
+Copy the environment template before enabling local services:
 
 ```bash
 cp .env.example .env.local
 ```
 
-Never commit `.env.local` or provider credentials. Provider integrations are optional; the core city and demonstration content work without them.
+Install the knowledge-service dependencies:
 
-## Repository boundaries
+```bash
+python3 -m venv services/knowledge/.venv
+source services/knowledge/.venv/bin/activate   # Windows: services\knowledge\.venv\Scripts\activate
+pip install -r services/knowledge/requirements.txt
+```
 
-Public content in this repository is either source code, explicitly licensed third-party material, or rewritten demonstration data. Do not commit personal archives, customer material, precise addresses, account identifiers, API keys, generated task traces, local databases, or raw uploads.
+Then start only what you need:
 
-See:
+```bash
+npm run service:knowledge       # 127.0.0.1:8000
+npm run service:generation      # 127.0.0.1:8788
+npm run service:collaboration   # 127.0.0.1:8787
+npm run service:agent           # 127.0.0.1:8790
+```
 
-- [`SECURITY.md`](./SECURITY.md) for responsible disclosure and local-service precautions.
-- [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md) for bundled asset attribution.
-- [`CONTRIBUTING.md`](./CONTRIBUTING.md) for development and pull-request rules.
+Provider-backed generation and agent calls are optional. Credentials remain in `.env.local`; never expose these local services to an untrusted network.
 
-## Project status
+## Validation
 
-Metrobsidian is a research prototype. Current priorities are simplifying scene ownership, making the local-service boundary explicit, and improving the mapping between knowledge structure and spatial interaction.
+```bash
+npm test
+npm run build
+npm run check:public
+```
+
+CI runs Node tests, Python tests, both production builds, and the public-release scanner.
+
+## Content and privacy boundary
+
+`content/demo-knowledge-base/` contains rewritten demonstration material, not a raw personal archive. Do not commit customer files, precise addresses, account identifiers, private logs, local databases, raw uploads, or secrets. New public examples must be reviewed as publishable source material rather than merely “masked originals.”
+
+Read [`SECURITY.md`](./SECURITY.md), [`CONTRIBUTING.md`](./CONTRIBUTING.md), and [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md) before extending the repository.
+
+## Status
+
+Metrobsidian is a research prototype, not a hosted multi-tenant product. Current work focuses on reducing interaction weight, clarifying service boundaries, and testing when spatial organization is genuinely better than folders and search.
+
+See [`ROADMAP.md`](./ROADMAP.md).
 
 ## License
 
-Source code is released under the [MIT License](./LICENSE). Bundled third-party assets retain their original licenses; review [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md) before redistribution.
+Source code is released under the [MIT License](./LICENSE). Bundled third-party assets retain their original licenses.

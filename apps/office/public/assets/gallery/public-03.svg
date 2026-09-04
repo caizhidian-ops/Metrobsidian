@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title desc">
+  <title id="title">Rising field</title>
+  <desc id="desc">Original abstract artwork created for the Metrobsidian demo.</desc>
+  <rect width="600" height="600" fill="#e5ddd0"/>
+  <path d="M85 440 Q190 100 300 440 T515 440" fill="none" stroke="#9368df" stroke-width="44"/><circle cx="300" cy="190" r="82" fill="#335c4b"/><rect x="120" y="470" width="360" height="36" fill="#f5efe6"/>
+  <text x="44" y="566" fill="#151515" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">METROBSIDIAN / 03</text>
+</svg>

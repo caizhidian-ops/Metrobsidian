@@ -1,0 +1,104 @@
+#city-entry-root {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.deepcity-hero {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: auto;
+  color: #f2efe8;
+  background: #080706;
+  isolation: isolate;
+}
+
+.shader-frame {
+  position: absolute;
+  inset: 0;
+}
+
+.shader-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.deepcity-hero__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(0 0 0 / 14%), transparent 22% 78%, rgb(0 0 0 / 46%)),
+    radial-gradient(circle at 50% 70%, transparent 0 52%, rgb(0 0 0 / 40%) 100%);
+}
+
+.deepcity-hero__content {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(52px, 11vh, 112px);
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  width: min(1120px, calc(100vw - 48px));
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.deepcity-hero__content p {
+  margin: 0;
+  color: #986cea;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .32em;
+}
+
+.deepcity-hero__content button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(272px, 74vw);
+  padding: 14px 16px 14px 20px;
+  border: 1px solid rgb(242 239 232 / 42%);
+  color: inherit;
+  background: rgb(10 9 8 / 70%);
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: .16em;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.deepcity-hero__content button:hover,
+.deepcity-hero__content button:focus-visible {
+  color: #12110f;
+  background: #f2efe8;
+  border-color: #f2efe8;
+  outline: none;
+}
+
+.deepcity-hero__hint {
+  position: absolute;
+  right: 24px;
+  bottom: 22px;
+  z-index: 2;
+  margin: 0;
+  color: rgb(242 239 232 / 52%);
+  font-size: 10px;
+  letter-spacing: .14em;
+}
+
+@media (max-width: 700px) {
+  .deepcity-hero__content { bottom: clamp(40px, 9vh, 72px); }
+  .deepcity-hero__hint { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deepcity-hero__content button { transition: none; }
+}

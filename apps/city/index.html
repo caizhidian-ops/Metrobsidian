@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <title>知识都市</title>
+  </head>
+  <body>
+    <main id="app-content">
+      <div id="app" aria-label="可交互的知识都市 3D 地图">
+        <header id="topbar">
+          <div class="brand-group">
+            <a class="brand" href="#" aria-label="知识都市总览">
+              <span class="brand__mark" aria-hidden="true"></span>
+              <span><strong>知识都市</strong><small>基于知识涌现出建筑与城市</small></span>
+            </a>
+            <div id="generator-trigger-slot"></div>
+            <button id="assets-trigger" class="annotation-trigger" type="button"><span aria-hidden="true">◇</span><span>我的资产</span></button>
+          </div>
+          <div class="topbar__actions">
+            <button id="agent-task-trigger" class="annotation-trigger" type="button"><span aria-hidden="true">✦</span><span>任务</span></button>
+            <aside id="file-drop-zone" aria-label="文件投递台" data-state="idle">
+              <input id="file-input" type="file" multiple hidden />
+              <button id="file-drop-button" class="annotation-trigger" type="button">
+                <span class="file-drop__icon" aria-hidden="true">⇧</span>
+                <span class="file-drop__copy">
+                  <strong>文件投递</strong>
+                  <small id="file-drop-status">拖入或选择 · 任意格式</small>
+                </span>
+              </button>
+              <ul id="file-drop-results" hidden></ul>
+            </aside>
+            <button id="annotation-trigger" class="annotation-trigger" type="button" aria-pressed="false">
+              <span aria-hidden="true">＋</span><span>标注</span>
+            </button>
+            <button id="command-trigger" class="search-trigger" type="button" aria-label="搜索知识">搜索知识</button>
+            <button id="reset-view" class="icon-button" type="button" aria-label="返回城市总览">⌂</button>
+          </div>
+        </header>
+
+        <aside id="pipeline-status" aria-label="建筑生成任务状态" data-phase="idle" aria-live="polite">
+          <header><span>建筑任务</span><strong id="pipeline-status-copy">等待投递</strong></header>
+          <ol>
+            <li data-phase="upload">上传文件</li>
+            <li data-phase="image">生成图片</li>
+            <li data-phase="model">生成 3D 资产</li>
+            <li data-phase="complete">完成</li>
+          </ol>
+        </aside>
+
+        <aside id="district-panel" aria-label="城市分区">
+          <header><span>城市索引</span><strong id="district-total">知识分区</strong></header>
+          <ul id="building-list"></ul>
+        </aside>
+
+        <aside id="collaboration-panel" aria-label="多人协同状态" data-state="connecting">
+          <header>
+            <span><i aria-hidden="true"></i><b id="collaboration-status">正在连接</b></span>
+            <strong id="collaboration-count">1 人在线</strong>
+          </header>
+          <p>房间 <code id="collaboration-room"></code></p>
+          <ul id="collaboration-users" aria-label="在线用户"></ul>
+          <footer>点击 3D 空间，其他人会看到你的红点。</footer>
+        </aside>
+
+        <section id="building-panel" aria-live="polite" aria-hidden="true" hidden>
+          <div class="building-panel__meta"><span id="building-code"></span><span id="building-count"></span></div>
+          <h1 id="building-name"></h1>
+          <p id="building-tagline"></p>
+          <p id="building-summary"></p>
+          <button id="enter-room" class="primary-button" type="button" hidden>进入房间</button>
+          <button id="open-library" class="primary-button" type="button" hidden>查看档案</button>
+        </section>
+
+        <aside id="annotation-panel" aria-label="空间评论" aria-hidden="true" hidden>
+          <header class="annotation-panel__header">
+            <div><span>空间标注</span><strong id="annotation-count">0 条评论</strong></div>
+            <button id="annotation-close" class="icon-button" type="button" aria-label="关闭标注面板">×</button>
+          </header>
+          <p id="annotation-empty" class="annotation-empty">点击“标注”，再点击地图中的位置留下评论。</p>
+          <ol id="annotation-list" class="annotation-list"></ol>
+          <footer><button id="annotation-export" class="primary-button" type="button" disabled>导出评论文档</button></footer>
+        </aside>
+
+        <div id="annotation-mode-hint" role="status" hidden>请选择空间中的一个位置</div>
+
+        <p id="map-instruction"><kbd>1–7</kbd> 核心分区 <span>·</span> <kbd>R</kbd> 全城总览</p>
+
+        <aside id="minimap" aria-label="城市小地图" data-state="ready">
+          <header class="minimap__header">
+            <span>城市导航</span>
+            <button id="minimap-toggle" type="button" aria-label="收起小地图" aria-expanded="true">−</button>
+          </header>
+          <div id="minimap-stage" class="minimap__stage">
+            <canvas id="minimap-canvas" aria-hidden="true"></canvas>
+            <div id="minimap-markers" class="minimap__markers"></div>
+          </div>
+          <footer class="minimap__footer"><span><i></i>当前位置</span><span>点击街区定位</span></footer>
+        </aside>
+
+        <footer id="statusbar"><span>知识库已连接</span><span id="document-total"></span></footer>
+
+        <section id="webgl-fallback" hidden>
+          <h1>无法加载 3D 地图</h1>
+          <p>当前浏览器或设备没有可用的 WebGL。你仍可通过搜索打开知识档案。</p>
+        </section>
+      </div>
+    </main>
+
+    <div id="city-entry-root"></div>
+
+    <dialog id="library-dialog" aria-labelledby="library-title">
+      <div class="library-shell">
+        <header class="dialog-header">
+          <div><span id="library-code"></span><h1 id="library-title">知识档案</h1></div>
+          <div class="dialog-actions">
+            <span id="document-save-status" role="status">源文档</span>
+            <button id="edit-document" class="secondary-button" type="button">编辑</button>
+            <button id="cancel-document" class="secondary-button" type="button" hidden>取消</button>
+            <button id="save-document" class="primary-button" type="button" hidden>保存</button>
+            <button class="icon-button" data-close-library type="button" aria-label="关闭文档库">×</button>
+          </div>
+        </header>
+        <div class="library-layout">
+          <nav class="document-nav" aria-label="文档列表"><ul id="document-list"></ul></nav>
+          <section class="document-workspace">
+            <article id="document-viewer" tabindex="0"></article>
+            <textarea id="document-editor" aria-label="编辑 Markdown 文档" spellcheck="true" hidden></textarea>
+          </section>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="command-dialog" aria-labelledby="command-label">
+      <div class="command-shell">
+        <label id="command-label" for="command-input">搜索知识</label>
+        <div class="command-input-row"><span aria-hidden="true">⌕</span><input id="command-input" type="search" placeholder="输入知识名称" autocomplete="off" /><kbd>ESC</kbd></div>
+        <div id="command-results" role="listbox" aria-label="搜索结果"></div>
+        <footer><span><kbd>↑</kbd><kbd>↓</kbd> 选择</span><span><kbd>↵</kbd> 打开</span></footer>
+      </div>
+    </dialog>
+
+    <dialog id="assets-dialog" aria-labelledby="assets-title">
+      <section class="assets-shell">
+        <header class="dialog-header"><div><span>建筑资产库</span><h1 id="assets-title">我的资产</h1></div><button id="assets-close" class="icon-button" type="button" aria-label="关闭我的资产">×</button></header>
+        <p id="assets-empty">还没有生成的建筑资产。</p>
+        <ul id="assets-list"></ul>
+      </section>
+    </dialog>
+
+    <dialog id="annotation-dialog" aria-labelledby="annotation-dialog-title">
+      <form id="annotation-form" class="annotation-form">
+        <header class="dialog-header">
+          <div><span>新建空间评论</span><h1 id="annotation-dialog-title">记录这个位置</h1></div>
+          <button class="icon-button" id="annotation-cancel-x" type="button" aria-label="取消标注">×</button>
+        </header>
+        <img id="annotation-preview" alt="创建标注时的 3D 视角截图" />
+        <div class="annotation-form__body">
+          <p id="annotation-coordinate" class="annotation-coordinate"></p>
+          <label for="annotation-comment">评论</label>
+          <textarea id="annotation-comment" name="comment" rows="4" maxlength="500" required placeholder="这里需要调整什么？"></textarea>
+          <label for="annotation-status">状态</label>
+          <select id="annotation-status" name="status">
+            <option value="open">待处理</option>
+            <option value="in-progress">处理中</option>
+            <option value="resolved">已解决</option>
+          </select>
+        </div>
+        <footer class="annotation-form__actions">
+          <button id="annotation-cancel" type="button">取消</button>
+          <button class="primary-button" type="submit">保存评论</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <dialog id="agent-task-dialog" aria-labelledby="agent-task-title">
+      <form id="agent-task-form" class="agent-task-form">
+        <header class="dialog-header"><div><span>本地角色 Agent</span><h1 id="agent-task-title">派发城市任务</h1></div><button id="agent-task-close" class="icon-button" type="button" aria-label="关闭任务对话框">×</button></header>
+        <div class="agent-task-form__body">
+          <fieldset><legend>执行角色</legend><label><input type="checkbox" name="roles" value="deepseek" checked /> DeepSeek · 阅读与总结</label><label><input type="checkbox" name="roles" value="niu" checked /> 牛来的牛 · 编辑与搬运</label></fieldset>
+          <label for="agent-target-building">目标建筑</label><select id="agent-target-building" name="targetBuilding"></select>
+          <label for="agent-target-path">限定路径（可选）</label><input id="agent-target-path" name="targetPath" placeholder="例如 公司/公开版/产品与合规概览_脱敏版.md" />
+          <label for="agent-task-prompt">任务</label><textarea id="agent-task-prompt" name="prompt" rows="5" required placeholder="例如：阅读公司目录，整理一份产品与合规要点到新 Markdown 文件，并检查格式。"></textarea>
+          <p id="agent-task-form-status" role="status">只会访问本项目的受限文本文件；角色不能删除文件。</p>
+        </div>
+        <footer class="annotation-form__actions"><button type="button" id="agent-task-cancel">取消</button><button class="primary-button" type="submit">开始任务</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="agent-log-dialog" aria-labelledby="agent-log-title">
+      <section class="agent-log-dialog__shell">
+        <header class="dialog-header"><div><span>角色工作记录</span><h1 id="agent-log-title">任务日志</h1></div><button id="agent-log-close" class="icon-button" type="button" aria-label="关闭工作记录">×</button></header>
+        <pre id="agent-log-content" tabindex="0"></pre>
+      </section>
+    </dialog>
+
+    <aside id="agent-task-panel" aria-label="角色指挥台">
+      <header><div><span>角色指挥台</span><strong id="agent-task-status">正在连接</strong></div><button id="agent-task-panel-new" type="button">派发任务</button></header>
+      <section id="agent-status-cards" aria-label="角色实时状态">
+        <article class="agent-status-card" data-role="deepseek"><div class="agent-status-card__identity"><i>DS</i><span><strong>DeepSeek</strong><small>阅读与总结</small></span></div><b id="agent-deepseek-state">等待服务</b><p id="agent-deepseek-activity">等待任务派发。</p></article>
+        <article class="agent-status-card" data-role="niu"><div class="agent-status-card__identity"><i>牛</i><span><strong>牛来的牛</strong><small>编辑与搬运</small></span></div><b id="agent-niu-state">等待服务</b><p id="agent-niu-activity">等待任务派发。</p></article>
+      </section>
+      <section class="agent-task-history"><div><span>最近任务</span><small>可暂停、继续或取消</small></div><ol id="agent-task-list"></ol></section>
+    </aside>
+
+    <script type="module" src="/src/city/main.ts"></script>
+  </body>
+</html>

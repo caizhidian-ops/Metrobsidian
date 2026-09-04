@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+    <title>家庭内部 · 记忆城市</title>
+  </head>
+  <body>
+    <main id="home-scene" aria-label="可交互的家庭内部 3D 房间">
+      <header class="room-topbar">
+        <a href="./" class="back-link" aria-label="返回记忆城市">← 返回城市</a>
+        <div><span>H-02</span><strong>家庭内部</strong></div>
+      </header>
+
+      <aside class="room-panel" aria-label="房间组件">
+        <span class="eyebrow">ROOM STUDY 01</span>
+        <h1>生活进行中</h1>
+        <p>4 份生活文档：1 份材料、2 份进行中、1 份暂停。</p>
+        <div id="home-document-shortcuts" class="document-shortcuts" aria-label="房间文档"></div>
+      </aside>
+
+      <div id="home-document-tooltip" class="document-tooltip" role="status" hidden>
+        <strong id="home-tooltip-title"></strong>
+        <span id="home-tooltip-status"></span>
+      </div>
+
+      <nav class="room-views" aria-label="房间视角">
+        <button type="button" data-view="overview" aria-pressed="true">全景</button>
+        <button type="button" data-view="desk" aria-pressed="false">工作区</button>
+        <button type="button" data-view="lounge" aria-pressed="false">休闲区</button>
+        <button type="button" data-view="practice" aria-pressed="false">练习角</button>
+        <button id="reset-room" type="button" aria-label="重置房间视角">↺</button>
+      </nav>
+
+      <p class="room-hint">悬停查看 · 点击阅读 · 拖拽旋转 · 双击复位</p>
+      <section id="home-webgl-fallback" hidden>
+        <h1>无法加载房间</h1>
+        <p>当前浏览器未启用 WebGL。</p>
+      </section>
+    </main>
+
+    <dialog id="home-document-dialog" aria-labelledby="home-reader-title">
+      <article class="document-reader">
+        <header>
+          <div><span id="home-reader-meta"></span><h2 id="home-reader-title"></h2></div>
+          <button id="close-home-reader" type="button" aria-label="关闭文档">×</button>
+        </header>
+        <div id="home-reader-body" class="document-reader__body"></div>
+      </article>
+    </dialog>
+    <script type="module" src="/src/home/main.ts"></script>
+  </body>
+</html>

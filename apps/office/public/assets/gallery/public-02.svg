@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title desc">
+  <title id="title">Archive window</title>
+  <desc id="desc">Original abstract artwork created for the Metrobsidian demo.</desc>
+  <rect width="600" height="600" fill="#c8d3cf"/>
+  <path d="M75 120 H525 V500 H75 Z" fill="none" stroke="#173f60" stroke-width="28"/><circle cx="300" cy="310" r="132" fill="#d69a61"/><path d="M160 150 L440 470" stroke="#f7f0e7" stroke-width="38"/>
+  <text x="44" y="566" fill="#151515" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">METROBSIDIAN / 02</text>
+</svg>

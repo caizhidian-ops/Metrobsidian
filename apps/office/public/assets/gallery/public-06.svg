@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title desc">
+  <title id="title">Three agents</title>
+  <desc id="desc">Original abstract artwork created for the Metrobsidian demo.</desc>
+  <rect width="600" height="600" fill="#e9e0d3"/>
+  <rect x="70" y="80" width="150" height="440" rx="75" fill="#0b2c4a"/><rect x="245" y="80" width="150" height="440" rx="75" fill="#c16e43"/><rect x="420" y="80" width="110" height="440" rx="55" fill="#f6eee3"/><circle cx="145" cy="190" r="44" fill="#151515"/>
+  <text x="44" y="566" fill="#151515" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">METROBSIDIAN / 06</text>
+</svg>

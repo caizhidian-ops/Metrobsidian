@@ -1,0 +1,155 @@
+#office-gallery-root {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.office-gallery {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: auto;
+  color: #f1f1ef;
+  background: #090909;
+}
+
+.office-gallery__orbit-stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 104px 24px 74px;
+  perspective: 1800px;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  background: radial-gradient(circle at 52% 46%, #272727 0, #101010 48%, #070707 100%);
+}
+
+.office-gallery__orbit-stage:active { cursor: grabbing; }
+
+.office-gallery__orbit-stage:focus-visible {
+  outline: 1px solid rgb(192 64 44 / 78%);
+  outline-offset: -12px;
+}
+
+.office-gallery__orbit {
+  --orbit-radius: clamp(380px, 42vw, 620px);
+  --orbit-rotation: 0deg;
+  position: relative;
+  width: clamp(240px, 27vw, 390px);
+  height: clamp(320px, 52vh, 580px);
+  transform: rotateX(-5deg) rotateY(var(--orbit-rotation));
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.office-gallery__orbit figure {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid rgb(255 255 255 / 14%);
+  background: #111;
+  box-shadow: 0 40px 110px rgb(0 0 0 / 68%);
+  backface-visibility: hidden;
+  transform: rotateY(var(--art-angle)) translateZ(var(--orbit-radius));
+}
+
+.office-gallery__orbit img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: saturate(.9) contrast(1.04);
+  pointer-events: none;
+}
+
+.office-gallery__scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgb(9 9 9 / 78%) 0%, transparent 38%),
+    linear-gradient(180deg, rgb(9 9 9 / 42%), transparent 28%, rgb(9 9 9 / 28%));
+}
+
+.office-gallery__header {
+  position: absolute;
+  top: 36px;
+  left: 40px;
+  width: min(440px, calc(100vw - 80px));
+}
+
+.office-gallery__header p {
+  margin: 0 0 14px;
+  color: #c0402c;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .32em;
+}
+
+.office-gallery__header h1 {
+  margin: 0;
+  font-family: Didot, "Bodoni 72", Georgia, "Songti SC", serif;
+  font-size: clamp(34px, 4vw, 62px);
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.office-gallery__header span {
+  display: block;
+  margin-top: 18px;
+  color: rgb(241 241 239 / 62%);
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+
+.office-gallery__index {
+  position: absolute;
+  right: 40px;
+  top: 42px;
+  color: rgb(241 241 239 / 56%);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: .3em;
+}
+
+.office-gallery__close {
+  position: absolute;
+  right: 40px;
+  bottom: 36px;
+  display: flex;
+  gap: 28px;
+  padding: 12px 14px 12px 18px;
+  border: 1px solid rgb(17 17 17 / 28%);
+  color: #111;
+  background: rgb(241 241 239 / 92%);
+  font: inherit;
+  font-size: 11px;
+  letter-spacing: .12em;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+}
+
+.office-gallery__close:hover,
+.office-gallery__close:focus-visible {
+  color: #f1f1ef;
+  background: #111;
+  outline: none;
+}
+
+@media (max-width: 700px) {
+  .office-gallery__orbit-stage { padding: 126px 20px 74px; }
+  .office-gallery__orbit {
+    --orbit-radius: clamp(255px, 75vw, 340px);
+    width: min(58vw, 250px);
+    height: min(46vh, 390px);
+  }
+  .office-gallery__header { top: 26px; left: 24px; }
+  .office-gallery__index { display: none; }
+  .office-gallery__close { right: 24px; bottom: 24px; }
+}

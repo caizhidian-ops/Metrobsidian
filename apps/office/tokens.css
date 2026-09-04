@@ -1,0 +1,60 @@
+:root {
+  --color-paper: oklch(97.4% 0.012 245);
+  --color-paper-2: oklch(94.8% 0.018 245);
+  --color-paper-3: oklch(91.5% 0.024 245);
+  --color-ink: oklch(21% 0.034 254);
+  --color-ink-2: oklch(31% 0.03 254);
+  --color-muted: oklch(47% 0.026 252);
+  --color-rule: oklch(84% 0.025 246);
+  --color-rule-strong: oklch(69% 0.04 248);
+  --color-accent: oklch(55% 0.205 256);
+  --color-accent-soft: oklch(91% 0.055 250);
+  --color-accent-ink: oklch(98% 0.01 245);
+  --color-error: oklch(56% 0.19 25);
+  --color-success: oklch(49% 0.13 150);
+  --color-map-water: oklch(77% 0.08 230);
+  --color-scrim: oklch(18% 0.04 255 / 0.36);
+  --color-shadow: oklch(25% 0.04 255 / 0.14);
+
+  --font-display: "Space Grotesk", "PingFang SC", sans-serif;
+  --font-body: "IBM Plex Sans", "PingFang SC", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
+
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  --text-xs: 0.64rem;
+  --text-sm: 0.8rem;
+  --text-base: 1rem;
+  --text-md: 1.25rem;
+  --text-lg: 1.5625rem;
+  --text-xl: 1.9531rem;
+  --text-2xl: 2.4414rem;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+
+  --rule-thin: 1px;
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --z-base: 1;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+}

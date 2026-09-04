@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#eef1ef" />
+    <title>云庭餐厅 · 3D 企业食堂</title>
+  </head>
+  <body>
+    <main id="canteen-app" aria-label="可交互的明亮企业食堂">
+      <div id="scene" aria-hidden="true"></div>
+
+      <header class="scene-header">
+        <a class="scene-brand" href="./" aria-label="返回记忆城市">
+          <span class="scene-brand__mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span><strong>云庭餐厅</strong><small>INTERACTIVE DINING HALL</small></span>
+        </a>
+        <nav class="view-controls" aria-label="场景视角">
+          <button type="button" data-view="hero" aria-pressed="true">主视角</button>
+          <button type="button" data-view="plan" aria-pressed="false">空间俯瞰</button>
+          <button type="button" id="light-toggle" aria-pressed="false">晚餐灯光</button>
+        </nav>
+      </header>
+
+      <aside class="scene-note">
+        <span>REFERENCE 02</span>
+        <strong>明亮企业共享餐厅</strong>
+        <p>拖拽旋转 · 滚轮缩放 · 右键平移</p>
+      </aside>
+
+      <div class="scene-legend" aria-hidden="true">
+        <span><i class="dot dot--blue"></i>深蓝卡座</span>
+        <span><i class="dot dot--wood"></i>浅木饰面</span>
+        <span><i class="dot dot--white"></i>白色餐桌</span>
+      </div>
+
+      <div id="loading" role="status" aria-live="polite">
+        <div class="loading-mark" aria-hidden="true"><i></i><i></i><i></i></div>
+        <p>正在布置餐厅</p>
+        <span></span>
+      </div>
+
+      <section id="webgl-fallback" hidden>
+        <h1>无法加载 3D 企业食堂</h1>
+        <p>当前浏览器没有可用的 WebGL 图形环境。</p>
+      </section>
+    </main>
+    <script type="module" src="/src/canteen/main.ts"></script>
+  </body>
+</html>

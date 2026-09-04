@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+    <title>医院内部 · 病房 · 记忆城市</title>
+  </head>
+  <body>
+    <main id="hospital-scene" aria-label="可交互的医院病房内部 3D 空间">
+      <header class="room-topbar">
+        <a href="./" class="back-link" aria-label="返回记忆城市">← 返回城市</a>
+        <div><span>M-04</span><strong>医院内部 · 病房</strong></div>
+      </header>
+
+      <aside class="room-panel" aria-label="病房组件">
+        <span class="eyebrow">WARD ROOM 01</span>
+        <h1>单人病房</h1>
+        <p>明亮通透的照护空间：病床、监护与治疗设备。</p>
+        <ul>
+          <li><i style="--swatch:#fcfaf4"></i>病床区</li>
+          <li><i style="--swatch:#4ade80"></i>监护区</li>
+          <li><i style="--swatch:#a9cce0"></i>墙体腰线</li>
+          <li><i style="--swatch:#5cc25e"></i>绿植角</li>
+        </ul>
+      </aside>
+
+      <nav class="room-views" aria-label="病房视角">
+        <button type="button" data-view="overview" aria-pressed="true">全景</button>
+        <button type="button" data-view="bed" aria-pressed="false">病床区</button>
+        <button type="button" data-view="monitor" aria-pressed="false">监护区</button>
+        <button id="reset-room" type="button" aria-label="重置病房视角">↺</button>
+      </nav>
+
+      <p class="room-hint">拖拽旋转 · 滚轮缩放 · 双击复位</p>
+      <section id="hospital-webgl-fallback" hidden>
+        <h1>无法加载病房</h1>
+        <p>当前浏览器未启用 WebGL。</p>
+      </section>
+    </main>
+    <script type="module" src="/src/hospital/main.ts"></script>
+  </body>
+</html>

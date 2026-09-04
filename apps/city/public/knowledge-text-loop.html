@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>知识都市 — Text Loop</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#000}
+  body{-webkit-font-smoothing:antialiased;font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif}
+  canvas{display:block;width:100vw;height:100vh}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<script>
+(() => {
+'use strict';
+
+/* Geometry follows ThreeUI GalleryHeading's authored 2962 × 2160 frame and
+   vertical-loop projection model. The plates are replaced by transparent
+   typographic planes; compositing remains back ring → headline → front ring. */
+const DW=2962, DH=2160, DASP=DW/DH;
+const RING={
+  cx:1481, cy:1080,
+  a:712,
+  ratio:.492,
+  axis:90,
+  n:12,
+  wordH:118,
+  dist:13,
+  phase:0
+};
+const DUR=15.015;
+const WORDS=[
+  'KNOWLEDGE','ART','HUMANITIES','HISTORY','LITERATURE','PHILOSOPHY',
+  'ARCHITECTURE','MEMORY','CULTURE','CITY','POETRY','ARCHIVE'
+];
+const DIDONE='Didot,"Bodoni 72","Bodoni MT","Times New Roman",Georgia,serif';
+const CN='"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","PingFang SC",serif';
+
+const cv=document.getElementById('stage');
+const ctx=cv.getContext('2d');
+let W=0,H=0,K=1,OX=0,OY=0,headLayer=null;
+
+function mkc(w,h){ const c=document.createElement('canvas'); c.width=w; c.height=h; return c; }
+function d2sx(x){return OX+x*K}
+function d2sy(y){return OY+y*K}
+
+const ax=RING.axis*Math.PI/180;
+const cf=RING.ratio, sf=Math.sqrt(1-cf*cf);
+const U=[Math.cos(ax),Math.sin(ax),0];
+const V=[-Math.sin(ax)*cf,Math.cos(ax)*cf,sf];
+const AXIS=[
+  U[1]*V[2]-U[2]*V[1],
+  U[2]*V[0]-U[0]*V[2],
+  U[0]*V[1]-U[1]*V[0]
+];
+
+function project(p){
+  const k=RING.a*K*RING.dist/(RING.dist-p[2]);
+  return [d2sx(RING.cx)+k*p[0],d2sy(RING.cy)+k*p[1],k];
+}
+
+function buildHead(){
+  headLayer=mkc(Math.max(1,W),Math.max(1,H));
+  const x=headLayer.getContext('2d');
+  const cx=d2sx(RING.cx);
+  const cy=d2sy(RING.cy);
+
+  // main title — natural measure, no horizontal squeeze
+  const titleSize=238*K;
+  x.save();
+  x.fillStyle='#ffffff';
+  x.textAlign='center';
+  x.textBaseline='middle';
+  x.font=`600 ${titleSize}px ${CN}`;
+  x.fillText('知识都市',cx,cy-28*K);
+  x.restore();
+
+  // subtitle gets its own type scale, avoiding the source component's shared cap-height squeeze
+  x.save();
+  x.fillStyle='#986CEA';
+  x.textAlign='center';
+  x.textBaseline='middle';
+  x.font=`500 ${108*K}px ${CN}`;
+  if ('letterSpacing' in x) x.letterSpacing=`${4*K}px`;
+  x.fillText('基于知识涌现出建筑与城市',cx,cy+184*K);
+  x.restore();
+
+}
+
+function makeWordTexture(word,front,index){
+  const probe=mkc(10,10).getContext('2d');
+  const fontPx=92;
+  probe.font=`400 ${fontPx}px ${DIDONE}`;
+  const measured=Math.ceil(probe.measureText(word).width);
+  const padX=30,padY=22;
+  const tex=mkc(measured+padX*2,fontPx+padY*2+20);
+  const x=tex.getContext('2d');
+  x.textAlign='center';
+  x.textBaseline='middle';
+  x.font=`400 ${fontPx}px ${DIDONE}`;
+  const purple = index % 2 === 0;
+  x.fillStyle = front
+    ? (purple ? '#986CEA' : '#FFFFFF')
+    : (purple ? 'rgba(152,108,234,.24)' : 'rgba(255,255,255,.24)');
+  if ('letterSpacing' in x) x.letterSpacing='5px';
+  x.fillText(word,tex.width/2,tex.height/2+2);
+  return tex;
+}
+
+const TEX=WORDS.map((word,index)=>({
+  front:makeWordTexture(word,true,index),
+  back:makeWordTexture(word,false,index)
+}));
+
+function physicalWordWidth(i){
+  // Keep long words from colliding while retaining a coherent ring cadence.
+  const chars=WORDS[i].length;
+  return Math.min(410,Math.max(238,185+chars*18));
+}
+
+function drawWord(i,psi){
+  const c=Math.cos(psi),s=Math.sin(psi);
+  const C=[c*U[0]+s*V[0],c*U[1]+s*V[1],c*U[2]+s*V[2]];
+  const T=[-s*U[0]+c*V[0],-s*U[1]+c*V[1],-s*U[2]+c*V[2]];
+
+  const tex=C[2]>0?TEX[i].front:TEX[i].back;
+  const halfW=physicalWordWidth(i)/(2*RING.a);
+  const halfH=RING.wordH/(2*RING.a);
+  const p0=project(C);
+  const pT=project([C[0]+T[0]*halfW,C[1]+T[1]*halfW,C[2]+T[2]*halfW]);
+  const pA=project([C[0]+AXIS[0]*halfH,C[1]+AXIS[1]*halfH,C[2]+AXIS[2]*halfH]);
+  const ex=pT[0]-p0[0],ey=pT[1]-p0[1];
+  const fx=pA[0]-p0[0],fy=pA[1]-p0[1];
+
+  if(Math.abs(ex*fy-ey*fx)<.15)return;
+
+  ctx.save();
+  ctx.setTransform(ex*2/tex.width,ey*2/tex.width,fx*2/tex.height,fy*2/tex.height,p0[0],p0[1]);
+  ctx.drawImage(tex,-tex.width/2,-tex.height/2);
+  ctx.restore();
+  ctx.setTransform(1,0,0,1,0,0);
+}
+
+function resize(){
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  W=Math.round(innerWidth*dpr); H=Math.round(innerHeight*dpr);
+  cv.width=W;cv.height=H;
+  const S=Math.min(W,H*DASP);
+  K=S/DW;
+  OX=(W-DW*K)/2;
+  OY=(H-DH*K)/2;
+  buildHead();
+  render(tNow);
+}
+
+function render(t){
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.fillStyle='#000';
+  ctx.fillRect(0,0,W,H);
+  ctx.imageSmoothingEnabled=true;
+  ctx.imageSmoothingQuality='high';
+
+  const spin=(t/DUR)*Math.PI*2*-1;
+  const list=[];
+  for(let i=0;i<RING.n;i++){
+    const psi=RING.phase*Math.PI/180-i*2*Math.PI/RING.n+spin;
+    const c=Math.cos(psi),s=Math.sin(psi);
+    list.push({i,psi,z:c*U[2]+s*V[2]});
+  }
+  list.sort((a,b)=>a.z-b.z);
+
+  // This is the whole penetration illusion.
+  let drawnText=false;
+  for(const item of list){
+    if(!drawnText && item.z>0){
+      ctx.drawImage(headLayer,0,0);
+      drawnText=true;
+    }
+    drawWord(item.i,item.psi);
+  }
+  if(!drawnText)ctx.drawImage(headLayer,0,0);
+}
+
+let hovering=false;
+let tNow=0;
+let speed=.12;
+let last=performance.now();
+let paused=false;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+document.documentElement.addEventListener('pointerenter',()=>hovering=true);
+document.documentElement.addEventListener('pointermove',()=>hovering=true);
+document.documentElement.addEventListener('pointerleave',()=>hovering=false);
+document.documentElement.addEventListener('pointercancel',()=>hovering=false);
+window.addEventListener('blur',()=>hovering=false);
+window.addEventListener('resize',resize);
+window.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();paused=!paused;}});
+
+function frame(now){
+  const dt=Math.min(.05,Math.max(0,(now-last)/1000));
+  last=now;
+  if(!paused && !reduce){
+    const target=hovering?1:.12;
+    speed+=(target-speed)*(1-Math.exp(-dt/.55));
+    tNow=((tNow+dt*speed)%DUR+DUR)%DUR;
+    render(tNow);
+  }
+  requestAnimationFrame(frame);
+}
+
+resize();
+requestAnimationFrame(frame);
+
+window.__seek=t=>{tNow=((t%DUR)+DUR)%DUR;render(tNow)};
+window.__pause=()=>paused=true;
+window.__play=()=>paused=false;
+})();
+</script>
+</body>
+</html>

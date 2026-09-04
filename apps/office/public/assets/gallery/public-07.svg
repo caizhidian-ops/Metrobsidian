@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title desc">
+  <title id="title">City signal</title>
+  <desc id="desc">Original abstract artwork created for the Metrobsidian demo.</desc>
+  <rect width="600" height="600" fill="#d7d2dd"/>
+  <path d="M90 470 L210 115 L315 470 Z" fill="#9368df"/><path d="M250 470 L390 170 L530 470 Z" fill="#315d75"/><circle cx="392" cy="150" r="58" fill="#f5eee4"/><path d="M90 505 H530" stroke="#151515" stroke-width="18"/>
+  <text x="44" y="566" fill="#151515" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">METROBSIDIAN / 07</text>
+</svg>

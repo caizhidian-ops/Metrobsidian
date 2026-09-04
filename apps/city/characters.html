@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <title>角色实验场 · 记忆城市</title>
+  </head>
+  <body>
+    <main id="character-app">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="返回记忆城市">
+          <span class="brand__mark" aria-hidden="true"></span>
+          <span><strong>角色实验场</strong><small>CHARACTER LAB 01</small></span>
+        </a>
+        <div class="topbar__actions">
+          <button id="overview-button" class="quiet-button" type="button">全景</button>
+          <button id="follow-button" class="quiet-button" type="button" aria-pressed="false">跟随镜头</button>
+        </div>
+      </header>
+
+      <aside class="character-panel" aria-label="选择与控制角色">
+        <p class="eyebrow">选择角色</p>
+        <div class="character-tabs" role="tablist" aria-label="角色列表">
+          <button class="character-card is-active" type="button" role="tab" aria-selected="true" data-character="niu">
+            <span class="character-card__swatch character-card__swatch--niu" aria-hidden="true"></span>
+            <span><strong>牛来的牛</strong><small>沉稳的黄色牛角色</small></span>
+          </button>
+          <button class="character-card" type="button" role="tab" aria-selected="false" data-character="deepseek">
+            <span class="character-card__swatch character-card__swatch--deepseek" aria-hidden="true"></span>
+            <span><strong>DeepSeek</strong><small>蓝色鲸鱼机器人</small></span>
+          </button>
+        </div>
+        <div class="control-row">
+          <button id="wander-button" class="primary-button" type="button" aria-pressed="false">开始自动巡游</button>
+          <button id="stop-button" class="quiet-button" type="button">停下</button>
+        </div>
+        <p id="character-status" class="status" role="status">牛来的牛 · 等待指令</p>
+      </aside>
+
+      <section class="instructions" aria-label="移动说明">
+        <span><kbd>WASD</kbd> / <kbd>方向键</kbd> 移动</span>
+        <span>点击地面前往</span>
+        <span>拖拽空白处旋转镜头</span>
+      </section>
+
+      <div id="character-stage" aria-label="可交互的 3D 角色实验场"></div>
+
+      <section id="webgl-fallback" hidden>
+        <h1>无法加载角色实验场</h1>
+        <p>当前浏览器或设备没有可用的 WebGL。</p>
+      </section>
+    </main>
+
+    <script type="module" src="/src/characters/main.ts"></script>
+  </body>
+</html>

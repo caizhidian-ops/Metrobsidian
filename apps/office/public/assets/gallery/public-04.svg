@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title desc">
+  <title id="title">Rotating rooms</title>
+  <desc id="desc">Original abstract artwork created for the Metrobsidian demo.</desc>
+  <rect width="600" height="600" fill="#d2d8e0"/>
+  <g transform="translate(300 300)"><rect x="-190" y="-190" width="380" height="380" rx="36" fill="#c97748" transform="rotate(12)"/><rect x="-145" y="-145" width="290" height="290" rx="28" fill="#214f72" transform="rotate(-19)"/><circle r="82" fill="#f8f1e8"/></g>
+  <text x="44" y="566" fill="#151515" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">METROBSIDIAN / 04</text>
+</svg>

@@ -1,0 +1,112 @@
+@import '../../tokens.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #hospital-scene { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+body {
+  background: #d8e6f1;
+  color: #2b3a4a;
+  font-family: var(--font-body);
+}
+button, a { font: inherit; }
+button { color: inherit; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 3px solid #0f6fe8; outline-offset: 3px; }
+#hospital-scene { position: relative; isolation: isolate; }
+#hospital-scene::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle at 50% 15%, #f2f9ff 0, #d8e6f1 48%, #b0d2e8 100%);
+  content: '';
+}
+#hospital-scene canvas { display: block; width: 100%; height: 100%; }
+
+.room-topbar {
+  position: fixed;
+  inset: 1rem 1rem auto;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  pointer-events: none;
+}
+.room-topbar > * { pointer-events: auto; }
+.back-link, .room-topbar > div, .room-panel, .room-views {
+  border: 1px solid rgba(49, 85, 132, .25);
+  background: rgba(248, 252, 255, .92);
+  box-shadow: 0 .6rem 2rem rgba(55, 94, 144, .12);
+  backdrop-filter: blur(16px);
+}
+.back-link {
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 1rem;
+  border-radius: .75rem;
+  color: #2b3a4a;
+  font-weight: 600;
+  text-decoration: none;
+}
+.room-topbar > div {
+  display: flex;
+  align-items: baseline;
+  gap: .65rem;
+  padding: .7rem 1rem;
+  border-radius: .75rem;
+}
+.room-topbar span, .eyebrow { color: #0f6fe8; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .08em; }
+.room-topbar strong { font-family: var(--font-display); }
+
+.room-panel {
+  position: fixed;
+  inset: 5.25rem auto auto 1rem;
+  z-index: 4;
+  width: min(17rem, calc(100vw - 2rem));
+  padding: 1rem;
+  border-radius: 1rem;
+}
+.room-panel h1 { margin: .3rem 0 .4rem; font-family: var(--font-display); font-size: 1.55rem; letter-spacing: -.04em; }
+.room-panel p { margin: 0; color: #5c7190; font-size: .85rem; }
+.room-panel ul { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+.room-panel li { display: flex; align-items: center; gap: .45rem; font-size: .78rem; font-weight: 600; }
+.room-panel i { width: .62rem; height: .62rem; background: var(--swatch); border-radius: .2rem; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+
+.room-views {
+  position: fixed;
+  inset: auto 1rem 1rem auto;
+  z-index: 4;
+  display: flex;
+  gap: .35rem;
+  padding: .35rem;
+  border-radius: .85rem;
+}
+.room-views button {
+  min-height: 2.5rem;
+  padding: 0 .9rem;
+  border: 0;
+  border-radius: .6rem;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+}
+.room-views button[aria-pressed='true'] { background: #0f6fe8; color: white; }
+.room-hint {
+  position: fixed;
+  inset: auto auto 1rem 1rem;
+  z-index: 4;
+  margin: 0;
+  color: #446486;
+  font-family: var(--font-mono);
+  font-size: .7rem;
+}
+
+#hospital-webgl-fallback { position: fixed; inset: 50% auto auto 50%; z-index: 10; transform: translate(-50%, -50%); padding: 2rem; background: white; border-radius: 1rem; }
+
+@media (max-width: 720px) {
+  .room-topbar > div { display: none; }
+  .room-panel { inset-block-start: 4.75rem; width: 13rem; padding: .8rem; }
+  .room-panel p { display: none; }
+  .room-panel ul { margin-top: .65rem; }
+  .room-hint { display: none; }
+}

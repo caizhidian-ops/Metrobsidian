@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FORM / VOID · Three.js 当代展厅</title>
+  </head>
+  <body>
+    <main id="app" aria-label="Three.js 当代艺术展厅">
+      <div class="gallery-ui">
+        <header class="gallery-title">
+          <span class="kicker">DEEPSPACE / EXHIBITION STUDY 02</span>
+          <h1>FORM<br><i>/</i> VOID</h1>
+          <p>空间、重量与光的研究</p>
+        </header>
+
+        <nav class="view-nav" aria-label="展厅参观视角">
+          <span>ROUTE</span>
+          <button type="button" data-view="entrance" class="is-active">入口</button>
+          <button type="button" data-view="sculpture">主展品</button>
+          <button type="button" data-view="sideHall">侧厅</button>
+        </nav>
+
+        <button id="light-toggle" class="light-toggle" type="button" aria-pressed="true">
+          <i aria-hidden="true"></i><span>策展灯光</span>
+        </button>
+
+        <div class="exhibition-meta" aria-hidden="true">
+          <span>01—07</span><b>SCULPTURE<br>AND SPACE</b>
+        </div>
+        <p class="hint">拖拽环看 · 滚轮缩放 · 双击回到入口</p>
+      </div>
+      <div id="scene"></div>
+    </main>
+    <script type="module" src="/src/gallery/main.ts"></script>
+  </body>
+</html>

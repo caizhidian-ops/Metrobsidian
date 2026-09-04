@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title desc">
+  <title id="title">Memory current</title>
+  <desc id="desc">Original abstract artwork created for the Metrobsidian demo.</desc>
+  <rect width="600" height="600" fill="#c9d6d1"/>
+  <path d="M70 160 C190 80 245 250 360 145 C445 70 500 140 535 210 L535 520 L70 520 Z" fill="#456f5c"/><path d="M70 320 C180 215 265 430 390 290 C455 220 500 265 535 330" fill="none" stroke="#9164ea" stroke-width="48"/>
+  <text x="44" y="566" fill="#151515" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">METROBSIDIAN / 05</text>
+</svg>

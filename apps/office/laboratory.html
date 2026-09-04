@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b1118" />
+    <title>计算科学实验室 · 海蓝中庭</title>
+  </head>
+  <body>
+    <main id="laboratory-app" aria-label="可交互的计算科学实验室">
+      <div id="lab-scene" aria-hidden="true"></div>
+
+      <header class="lab-header">
+        <a class="lab-brand" href="/office.html" aria-label="返回公司办公空间">
+          <span class="lab-brand__mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span><strong>计算科学实验室</strong><small>HAILAN COMPUTATIONAL LAB</small></span>
+        </a>
+
+        <nav class="lab-controls" aria-label="实验室视角">
+          <button type="button" data-view="overview" aria-pressed="true">实验室总览</button>
+          <button type="button" data-view="compute" aria-pressed="false">计算机机房</button>
+          <button type="button" data-view="library" aria-pressed="false">书架区</button>
+        </nav>
+      </header>
+
+      <aside class="lab-note">
+        <span>LAB SPACE · 01</span>
+        <strong>计算、阅读与研究共处一室</strong>
+        <p>拖拽查看空间 · 点击发光书架进入阅读</p>
+      </aside>
+
+      <button type="button" id="open-shelf" class="shelf-entry">
+        <span>RESEARCH LIBRARY</span>
+        <strong>打开实验室书架</strong>
+      </button>
+
+      <div id="lab-loading" role="status" aria-live="polite">
+        <div class="loading-rack" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <p>正在启动实验室</p>
+      </div>
+
+      <section id="lab-webgl-fallback" hidden>
+        <h1>无法加载实验室空间</h1>
+        <p>当前浏览器没有可用的 WebGL 图形环境。</p>
+        <button type="button" data-open-shelf>直接打开书架</button>
+      </section>
+
+      <section id="shelf-overlay" class="shelf-overlay" role="dialog" aria-modal="true" aria-label="实验室书架" aria-hidden="true" inert>
+        <div class="shelf-overlay__bar">
+          <span><small>LAB ARCHIVE</small><strong>实验室书架</strong></span>
+          <button type="button" id="close-shelf">返回实验室空间</button>
+        </div>
+        <div class="shader-frame" data-component="CompleteShelfLandingPage">
+          <iframe
+            id="complete-shelf"
+            title="实验室研究书架"
+            src="about:blank"
+            data-src="/landing-pages/complete-shelf-v2.html"
+            sandbox="allow-downloads allow-forms allow-modals allow-popups allow-same-origin allow-scripts"
+            loading="eager"
+          ></iframe>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="/src/laboratory/main.ts"></script>
+  </body>
+</html>

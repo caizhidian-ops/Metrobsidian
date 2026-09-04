@@ -1,0 +1,35 @@
+{
+  "name": "metrobsidian",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A local-first 3D knowledge city built with Three.js.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0",
+    "npm": ">=10"
+  },
+  "packageManager": "npm@10.9.2",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:city": "npm run dev -w @metrobsidian/city",
+    "dev:office": "npm run dev -w @metrobsidian/office",
+    "build": "npm run build -w @metrobsidian/city && npm run build -w @metrobsidian/office",
+    "serve": "node serve-deep-city.mjs",
+    "test": "npm run test:node && npm run test:python",
+    "test:node": "node --experimental-strip-types --test services/agent/agent-runtime.test.mjs services/collaboration/collaboration-server.test.mjs services/generation/generation-provider.test.mjs apps/city/tests/cityLayout.test.ts",
+    "test:python": "node scripts/run-python-tests.mjs",
+    "test:agents": "node --test services/agent/agent-runtime.test.mjs",
+    "test:collab": "node --test services/collaboration/collaboration-server.test.mjs",
+    "test:generation": "node --test services/generation/generation-provider.test.mjs",
+    "service:knowledge": "node scripts/run-knowledge-service.mjs",
+    "service:generation": "node services/generation/generation-proxy.mjs",
+    "service:agent": "node services/agent/agent-server.mjs",
+    "service:collaboration": "node services/collaboration/collaboration-server.mjs",
+    "check:public": "node scripts/check-public-release.mjs"
+  },
+  "dependencies": {
+    "ws": "^8.21.3"
+  }
+}
