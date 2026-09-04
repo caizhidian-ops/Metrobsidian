@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
-      SNAPSHOT_URL: "https://sdmntprwestus3.oaiusercontent.com/files/00000000-1c88-81fd-9d73-c24f51790b49/raw?se=2026-09-04T09%3A11%3A53Z&sp=r&sv=2026-02-06&sr=b&scid=be4a407e-c970-5238-9f6f-183d27a9d614&skoid=2d2fbb03-9efb-4ad0-a91c-1db2f5a47997&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-04T03%3A01%3A55Z&ske=2026-09-05T03%3A01%3A55Z&sks=b&skv=2026-02-06&sig=KZarQn%2BpUHFI2qLNLEQPWNAHCeybKEjWdQbK3cdWnbA%3D"
+      SNAPSHOT_URL: "https://sdmntprsouthcentralus.oaiusercontent.com/files/00000000-eb64-81f7-8f90-3018e85d5eea/raw?se=2026-09-04T09%3A38%3A07Z&sp=r&sv=2026-02-06&sr=b&scid=b5ad5181-7f9c-516d-9da1-0d66d80cc872&skoid=2d2fbb03-9efb-4ad0-a91c-1db2f5a47997&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-04T03%3A21%3A36Z&ske=2026-09-05T03%3A21%3A36Z&sks=b&skv=2026-02-06&sig=dE/Q8IQ6iRn3MwuAgQ/zMPqGN%2B1lqiCmwyqAM/ZnVVA%3D"
 
     steps:
       - name: Check out import branch
@@ -28,12 +28,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in .ops/prepare/part-*; do
-            printf '%s ' "$file"
-            wc -c < "$file" | tr -d '\n'
-            printf ' '
-            sha256sum "$file" | cut -d' ' -f1
-          done
           cat .ops/prepare/part-* > /tmp/prepare-public.b64
           echo "3ad386808c60bc4142e5f0b8031ed961957d5072d3292d7ab64d15db4c6c7cc4  /tmp/prepare-public.b64" | sha256sum --check
           base64 --decode /tmp/prepare-public.b64 | gzip --decompress > /tmp/prepare-public.py
@@ -96,6 +90,9 @@ jobs:
           rm -rf services/knowledge/data services/knowledge/_tmp_build_test agents
           find services/knowledge -type d -name __pycache__ -prune -exec rm -rf {} +
           npm run check:public
+          # Publish source first; CI workflow is added separately because the Actions token
+          # cannot create/update workflow files during this migration push.
+          rm -rf .github
           git add --all
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
