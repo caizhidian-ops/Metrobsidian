@@ -1,0 +1,65 @@
+name: Screenshot smoke test
+
+on:
+  push:
+    branches:
+      - ops/screenshot-smoke
+    paths:
+      - .github/workflows/screenshot-smoke.yml
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: npm
+
+      - name: Install and build
+        run: |
+          npm ci --ignore-scripts --prefer-offline
+          npm run build
+
+      - name: Start production preview
+        run: |
+          nohup npm run serve >/tmp/metrobsidian-server.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:5190/ >/dev/null; then break; fi
+            sleep 1
+          done
+          curl -fIsS http://127.0.0.1:5190/ | head
+          curl -fIsS http://127.0.0.1:5190/office.html | head
+
+      - name: Capture real browser screenshot
+        run: |
+          CHROME=$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)
+          echo "Using $CHROME"
+          "$CHROME" \
+            --headless=new \
+            --no-sandbox \
+            --disable-dev-shm-usage \
+            --enable-webgl \
+            --ignore-gpu-blocklist \
+            --use-gl=angle \
+            --use-angle=swiftshader \
+            --window-size=1440,1000 \
+            --virtual-time-budget=9000 \
+            --screenshot=metrobsidian-city.png \
+            http://127.0.0.1:5190/
+          test -s metrobsidian-city.png
+          file metrobsidian-city.png
+
+      - name: Upload screenshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: metrobsidian-city-screenshot
+          path: metrobsidian-city.png
+          if-no-files-found: error
+          retention-days: 1
