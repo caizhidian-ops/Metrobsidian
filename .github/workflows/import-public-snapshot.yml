@@ -1,0 +1,98 @@
+name: Import public snapshot
+
+on:
+  push:
+    branches:
+      - ops/import-public-snapshot
+    paths:
+      - .github/workflows/import-public-snapshot.yml
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      SNAPSHOT_URL: "https://sdmntprwestus3.oaiusercontent.com/files/00000000-8094-81fd-86ac-7086f4f8b688/raw?se=2026-09-04T09%3A08%3A07Z&sp=r&sv=2026-02-06&sr=b&scid=d031dc58-0675-5ce3-8661-c67826bfb41e&skoid=2d2fbb03-9efb-4ad0-a91c-1db2f5a47997&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-04T03%3A21%3A24Z&ske=2026-09-05T03%3A21%3A24Z&sks=b&skv=2026-02-06&sig=GCisvIprDO6QfRvUD3CR74sZUpvh9QpNg0kAHjkBS/M%3D"
+
+    steps:
+      - name: Check out import branch
+        uses: actions/checkout@v4
+        with:
+          ref: ops/import-public-snapshot
+          fetch-depth: 0
+
+      - name: Reconstruct migration script
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .ops/prepare/part-* > /tmp/prepare-public.b64
+          echo "3ad386808c60bc4142e5f0b8031ed961957d5072d3292d7ab64d15db4c6c7cc4  /tmp/prepare-public.b64" | sha256sum --check
+          base64 --decode /tmp/prepare-public.b64 | gzip --decompress > /tmp/prepare-public.py
+          echo "87a7a7e8c94422433a362742debc9ba5594586ec7d77375ebc882a84a76b0159  /tmp/prepare-public.py" | sha256sum --check
+
+      - name: Download sanitized source snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --retry-delay 2 "$SNAPSHOT_URL" --output /tmp/metrobsidian-public.zip
+          echo "19fd5d9f4f35434bdb8789ede84de026ead0ef072f9f04ca3688cb71398d22a1  /tmp/metrobsidian-public.zip" | sha256sum --check
+          mkdir -p /tmp/metrobsidian-artifact
+          unzip -q /tmp/metrobsidian-public.zip -d /tmp/metrobsidian-artifact
+
+      - name: Replace main with the cleaned snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --depth=1
+          git checkout -B main origin/main
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          tar -xzf /tmp/metrobsidian-artifact/metrobsidian-public.tar.gz -C .
+          python /tmp/prepare-public.py .
+          rm -f package-lock.json
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: services/knowledge/requirements.txt
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --package-lock-only --ignore-scripts --registry=https://registry.npmjs.org
+          npm ci --registry=https://registry.npmjs.org
+          python -m pip install --disable-pip-version-check -r services/knowledge/requirements.txt
+
+      - name: Validate public release
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm test
+          npm run build
+          npm run check:public
+
+      - name: Publish to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf node_modules apps/city/dist apps/office/dist
+          rm -rf services/knowledge/data services/knowledge/_tmp_build_test agents
+          find services/knowledge -type d -name __pycache__ -prune -exec rm -rf {} +
+          npm run check:public
+          git add --all
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "feat: publish cleaned Metrobsidian monorepo"
+          git push origin HEAD:main
