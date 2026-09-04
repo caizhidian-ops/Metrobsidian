@@ -21,10 +21,10 @@ jobs:
         with:
           node-version: '22.12.0'
 
-      - name: Sync lockfile, install, and build
+      - name: Clean install and build
         run: |
-          npm install --package-lock-only --ignore-scripts
-          npm ci --ignore-scripts
+          rm -rf node_modules apps/city/node_modules apps/office/node_modules package-lock.json
+          npm install --ignore-scripts --no-audit --no-fund
           npm run build
 
       - name: Start production preview
@@ -66,7 +66,7 @@ jobs:
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "fix: sync workspace lockfile"
+            git commit -m "fix: regenerate workspace lockfile"
             git push origin HEAD:main
           fi
 
