@@ -8,7 +8,7 @@ on:
       - .github/workflows/screenshot-smoke.yml
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   smoke:
@@ -20,11 +20,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22.12.0'
-          cache: npm
 
-      - name: Install and build
+      - name: Sync lockfile, install, and build
         run: |
-          npm ci --ignore-scripts --prefer-offline
+          npm install --package-lock-only --ignore-scripts
+          npm ci --ignore-scripts
           npm run build
 
       - name: Start production preview
@@ -55,6 +55,20 @@ jobs:
             http://127.0.0.1:5190/
           test -s metrobsidian-city.png
           file metrobsidian-city.png
+
+      - name: Fix main lockfile
+        run: |
+          cp package-lock.json /tmp/package-lock.json
+          git fetch origin main
+          git checkout -B main origin/main
+          cp /tmp/package-lock.json package-lock.json
+          git add package-lock.json
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "fix: sync workspace lockfile"
+            git push origin HEAD:main
+          fi
 
       - name: Upload screenshot
         uses: actions/upload-artifact@v4
